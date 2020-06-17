@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-express-mongoose-demo",
+  "name": "swimlane-devops-practical",
   "description": "A demo app illustrating the usage of express, mongoose, passportjs, pug and other modules in nodejs",
   "keywords": [
     "express",
