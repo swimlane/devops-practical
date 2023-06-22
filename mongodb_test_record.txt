@@ -1,0 +1,78 @@
+> mongosh --port 2717
+Current Mongosh Log ID:	64942acbc753c4f628f63bb5
+Connecting to:		mongodb://127.0.0.1:2717/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.0
+Using MongoDB:		6.0.6
+Using Mongosh:		1.10.0
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2023-06-22T11:02:52.656+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2023-06-22T11:02:53.864+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2023-06-22T11:02:53.865+00:00: vm.max_map_count is too low
+------
+
+test> show dbs
+admin    40.00 KiB
+config  108.00 KiB
+local    72.00 KiB
+test    172.00 KiB
+test> 
+
+test> 
+
+test> show collections
+articles
+sessions
+users
+test> 
+
+test> db.articles.find()
+[
+  {
+    _id: ObjectId("64942854de9ef00031a3afde"),
+    image: { files: [] },
+    title: 'Way of Life',
+    body: 'Grief or Joy Stay Mile High!',
+    tags: [ 'Spiritual_Thought' ],
+    comments: [
+      {
+        body: 'A beautiful thought..',
+        _id: ObjectId("64942aa0e8746d00308aee69"),
+        user: ObjectId("649427aade9ef00031a3afdb"),
+        createdAt: ISODate("2023-06-22T11:04:00.276Z")
+      }
+    ],
+    createdAt: ISODate("2023-06-22T10:54:12.905Z"),
+    user: ObjectId("649427aade9ef00031a3afdb"),
+    __v: 1
+  }
+]
+test> 
+
+test> db.users.find()
+[
+  {
+    _id: ObjectId("649427aade9ef00031a3afdb"),
+    name: 'Sunil Sadhwani',
+    email: 'formlessone82@gmail.com',
+    username: 'sunsad',
+    provider: 'local',
+    hashed_password: 'a7ec2bf595967aaa06fa027ccde1567ecf02cd0e',
+    salt: '1422588235140',
+    authToken: '',
+    __v: 0
+  }
+]
+test> 
+
+test> db.sessions.find()
+[
+  {
+    _id: '01rUmN49KbecX0SPY_R4AxdNlco2-nqi',
+    expires: ISODate("2023-07-06T11:04:01.705Z"),
+    session: '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"flash":{},"csrfSecret":"5OTYybtQm3MuhlwOCo2hJyzL","returnTo":"/articles/new","passport":{"user":"649427aade9ef00031a3afdb"}}'
+  }
+]
+test> 
