@@ -66,8 +66,10 @@ UserSchema.path('email').validate(function(email) {
     if (this.skipValidation()) return resolve(true);
 
     // Check only when it is a new user or when email field is modified
-    if (this.isNew || this.isModified('email')) {
-      User.find({ email }).exec((err, users) => resolve(!err && !users.length));
+      if (this.isNew || this.isModified('email')) {
+        User.find({ email }).exec()
+          .then(users => resolve(!users.length))
+          .catch(() => resolve(false));
     } else resolve(true);
   });
 }, 'Email `{VALUE}` already exists');
@@ -165,13 +167,13 @@ UserSchema.statics = {
    * @param {Function} cb
    * @api private
    */
-
-  load: function(options, cb) {
-    options.select = options.select || 'name username';
-    return this.findOne(options.criteria)
-      .select(options.select)
-      .exec(cb);
-  }
+    // Refactored to use async/await and return a Promise
+    load: async function(options) {
+      options.select = options.select || 'name username';
+      return await this.findOne(options.criteria)
+        .select(options.select)
+        .exec();
+    }
 };
 
 mongoose.model('User', UserSchema);

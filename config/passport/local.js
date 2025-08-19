@@ -17,13 +17,13 @@ module.exports = new LocalStrategy(
     usernameField: 'email',
     passwordField: 'password'
   },
-  function(email, password, done) {
+  async function(email, password, done) {
     const options = {
       criteria: { email: email },
       select: 'name username email hashed_password salt'
     };
-    User.load(options, function(err, user) {
-      if (err) return done(err);
+    try {
+      const user = await User.load(options);
       if (!user) {
         return done(null, false, { message: 'Unknown user' });
       }
@@ -31,6 +31,8 @@ module.exports = new LocalStrategy(
         return done(null, false, { message: 'Invalid password' });
       }
       return done(null, user);
-    });
+    } catch (err) {
+      return done(err);
+    }
   }
 );

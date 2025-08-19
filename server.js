@@ -20,7 +20,7 @@ const passport = require('passport');
 const config = require('./config');
 
 const models = join(__dirname, 'app/models');
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 /**
@@ -39,22 +39,13 @@ require('./config/passport')(passport);
 require('./config/express')(app, passport);
 require('./config/routes')(app, passport);
 
-connect();
-
-function listen() {
-  if (app.get('env') === 'test') return;
-  app.listen(port);
-  console.log('Express app started on port ' + port);
-}
-
 function connect() {
-  mongoose.connection
-    .on('error', console.log)
-    .on('disconnected', connect)
-    .once('open', listen);
-  return mongoose.connect(config.db, {
-    keepAlive: 1,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  console.log(config.db)
+  mongoose.connect(config.db)
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 }
+connect();
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

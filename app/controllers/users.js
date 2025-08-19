@@ -5,33 +5,33 @@
  */
 
 const mongoose = require('mongoose');
-const { wrap: async } = require('co');
+// Removed co dependency; use native async/await
 const User = mongoose.model('User');
 
 /**
  * Load
  */
 
-exports.load = async(function*(req, res, next, _id) {
+exports.load = async function(req, res, next, _id) {
   const criteria = { _id };
   try {
-    req.profile = yield User.load({ criteria });
+    req.profile = await User.load({ criteria });
     if (!req.profile) return next(new Error('User not found'));
   } catch (err) {
     return next(err);
   }
   next();
-});
+}
 
 /**
  * Create user
  */
 
-exports.create = async(function*(req, res) {
+exports.create = async function(req, res) {
   const user = new User(req.body);
   user.provider = 'local';
   try {
-    yield user.save();
+    await user.save();
     req.logIn(user, err => {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!');
       res.redirect('/');
@@ -47,7 +47,7 @@ exports.create = async(function*(req, res) {
       user
     });
   }
-});
+}
 
 /**
  *  Show profile
@@ -95,8 +95,10 @@ exports.signup = function(req, res) {
  */
 
 exports.logout = function(req, res) {
-  req.logout();
-  res.redirect('/login');
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/login');
+  });
 };
 
 /**

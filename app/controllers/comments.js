@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-const { wrap: async } = require('co');
+// Removed co dependency; use native async/await
 
 /**
  * Load comment
@@ -21,18 +21,18 @@ exports.load = function(req, res, next, id) {
  * Create comment
  */
 
-exports.create = async(function*(req, res) {
+exports.create = async function(req, res) {
   const article = req.article;
-  yield article.addComment(req.user, req.body);
+  await article.addComment(req.user, req.body);
   res.redirect(`/articles/${article._id}`);
-});
+}
 
 /**
  * Delete comment
  */
 
-exports.destroy = async(function*(req, res) {
-  yield req.article.removeComment(req.params.commentId);
+exports.destroy = async function(req, res) {
+  await req.article.removeComment(req.params.commentId);
   req.flash('info', 'Removed comment');
   res.redirect(`/articles/${req.article.id}`);
-});
+}

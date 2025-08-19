@@ -20,9 +20,14 @@ const local = require('./passport/local');
 module.exports = function(passport) {
   // serialize sessions
   passport.serializeUser((user, cb) => cb(null, user.id));
-  passport.deserializeUser((id, cb) =>
-    User.load({ criteria: { _id: id } }, cb)
-  );
+  passport.deserializeUser(async (id, cb) => {
+    try {
+      const user = await User.load({ criteria: { _id: id } });
+      cb(null, user);
+    } catch (err) {
+      cb(err);
+    }
+  });
 
   // use these strategies
   passport.use(local);

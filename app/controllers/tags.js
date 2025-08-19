@@ -5,14 +5,14 @@
  */
 
 const mongoose = require('mongoose');
-const { wrap: async } = require('co');
+// Removed co dependency; use native async/await
 const Article = mongoose.model('Article');
 
 /**
  * List items tagged with a tag
  */
 
-exports.index = async(function*(req, res) {
+exports.index = async function(req, res) {
   const criteria = { tags: req.params.tag };
   const page = (req.params.page > 0 ? req.params.page : 1) - 1;
   const limit = 30;
@@ -22,8 +22,8 @@ exports.index = async(function*(req, res) {
     criteria: criteria
   };
 
-  const articles = yield Article.list(options);
-  const count = yield Article.countDocuments(criteria);
+  const articles = await Article.list(options);
+  const count = await Article.countDocuments(criteria);
 
   res.render('articles/index', {
     title: 'Articles tagged ' + req.params.tag,
@@ -31,4 +31,4 @@ exports.index = async(function*(req, res) {
     page: page + 1,
     pages: Math.ceil(count / limit)
   });
-});
+}
